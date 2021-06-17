@@ -1,4 +1,4 @@
-import Form from '../models/form';
+import Form, { EventType } from '../models/form';
 import FormDAO from '../DAO/formDAO';
 
 export class FormService {
@@ -6,8 +6,53 @@ export class FormService {
 		public forms = FormDAO,
   ) {}
 
-  addForm(form: Form): Promise<boolean> {
-    return this.forms.addForm(form);
+  // eslint-disable-next-line class-methods-use-this
+  urgency(currentDate: Date, eventDate: Date): boolean {
+    const changeDate = new Date(eventDate);
+    const checkDate = changeDate.getDate() - 14;
+    if(currentDate.getDate() < checkDate) {
+      return false;
+    }
+    return true;
+  }
+
+  addForm(
+    name: string,
+    email: string,
+    eventDate: Date,
+    time: Date,
+    location: string,
+    description: string,
+    cost: number,
+    gradingFormat: 'Score' | 'Presentation',
+    eventType: EventType,
+    attached: {} | undefined,
+  ): Promise<boolean> {
+    const subDate = new Date();
+    const id = Math.floor(Math.random() * 900000) + 100000;
+    const isUrgent = this.urgency(subDate, eventDate);
+
+    const newForm = new Form(
+      id,
+      name,
+      email,
+      subDate,
+      eventDate,
+      time,
+      location,
+      description,
+      cost,
+      gradingFormat,
+      undefined,
+      undefined,
+      isUrgent,
+      eventType,
+      attached,
+      'To Super',
+      'Pending',
+    );
+
+    return this.forms.addForm(newForm);
   }
 
   getById(id: number): Promise<Form | undefined> {
