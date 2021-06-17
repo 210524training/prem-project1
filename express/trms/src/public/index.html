@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TRMS Page</title>
+    </head>
+    <body>
+        <h1>TRMS</h1>
+        <script>
+            (async () => {
+                const data = await fetch('http://localhost:3000/json');
+                const obj = await data.json();
+
+                console.log(obj);
+            })();
+        </script>
+    </body>
+</html>

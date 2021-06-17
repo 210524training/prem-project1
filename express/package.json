@@ -1,0 +1,23 @@
+{
+  "name": "trms-tables",
+  "version": "1.0.0",
+  "description": "",
+  "main": "userTable.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.927.0",
+    "bootstrap": "^5.0.1",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.2",
+    "@types/react-router-dom": "^5.1.7",
+    "prop-types": "^15.7.2",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
+  }
+}
