@@ -27,7 +27,7 @@ export class ReimbDAO {
     }
   }
 
-  async getById(formId: number): Promise<Form | undefined> {
+  async getById(formId: string): Promise<Form | undefined> {
     const params: DocumentClient.GetItemInput = {
       TableName: 'formTable',
       Key: {
@@ -88,7 +88,7 @@ export class ReimbDAO {
     }
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const params: DocumentClient.DeleteItemInput = {
       TableName: 'formTable',
       Key: {

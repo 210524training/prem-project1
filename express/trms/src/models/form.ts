@@ -16,7 +16,7 @@ export type Approval = 'Pending' | 'Super' | 'Head' | 'Coordinator';
 
 export default class Reimbursement {
   constructor(
-		public formId = Math.floor(Math.random() * 900000) + 100000,
+		public formId: string,
 		public name: string,
 		public email: string,
 		public submissionDate: Date,

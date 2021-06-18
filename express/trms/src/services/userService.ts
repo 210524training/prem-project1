@@ -18,8 +18,14 @@ export class UserService {
     return found;
   }
 
-  register(user: User): Promise<boolean> {
-    return this.users.addUser(user);
+  addUser(user: User): Promise<boolean> {
+    return this.users.addUser(new User(
+      user.username,
+      user.password,
+      user.role,
+      user.email,
+      user.formId,
+    ));
   }
 
   findByUsername(username: string): Promise<User | undefined> {
@@ -27,7 +33,13 @@ export class UserService {
   }
 
   update(user: User): Promise<boolean> {
-    return this.users.update(user);
+    return this.users.update(new User(
+      user.username,
+      user.password,
+      user.role,
+      user.email,
+      user.formId,
+    ));
   }
 
   delete(username: string): Promise<boolean> {

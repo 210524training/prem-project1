@@ -1,4 +1,4 @@
-import Form, { EventType } from '../models/form';
+import Form from '../models/form';
 import FormDAO from '../DAO/formDAO';
 
 export class FormService {
@@ -16,46 +16,32 @@ export class FormService {
     return true;
   }
 
-  addForm(
-    name: string,
-    email: string,
-    eventDate: Date,
-    time: Date,
-    location: string,
-    description: string,
-    cost: number,
-    gradingFormat: 'Score' | 'Presentation',
-    eventType: EventType,
-    attached: {} | undefined,
-  ): Promise<boolean> {
+  addForm(form: Form): Promise<boolean> {
     const subDate = new Date();
-    const id = Math.floor(Math.random() * 900000) + 100000;
-    const isUrgent = this.urgency(subDate, eventDate);
-
-    const newForm = new Form(
+    const id = Math.random().toString(36).substring(8);
+    const isUrgent = this.urgency(subDate, form.eventDate);
+    return this.forms.addForm(new Form(
       id,
-      name,
-      email,
+      form.name,
+      form.email,
       subDate,
-      eventDate,
-      time,
-      location,
-      description,
-      cost,
-      gradingFormat,
+      form.eventDate,
+      form.time,
+      form.location,
+      form.description,
+      form.cost,
+      form.gradingFormat,
       undefined,
       undefined,
       isUrgent,
-      eventType,
-      attached,
+      form.eventType,
+      form.attached,
       'To Super',
       'Pending',
-    );
-
-    return this.forms.addForm(newForm);
+    ));
   }
 
-  getById(id: number): Promise<Form | undefined> {
+  getById(id: string): Promise<Form | undefined> {
     return this.forms.getById(id);
   }
 
@@ -68,10 +54,28 @@ export class FormService {
   }
 
   update(form: Form): Promise<boolean> {
-    return this.forms.update(form);
+    return this.forms.update(new Form(
+      form.formId,
+      form.name,
+      form.email,
+      form.submissionDate,
+      form.eventDate,
+      form.time,
+      form.location,
+      form.description,
+      form.cost,
+      form.gradingFormat,
+      form.finalGrade,
+      form.gradeSatisfaction,
+      form.urgency,
+      form.eventType,
+      form.attached,
+      form.formStatus,
+      form.approvedBy,
+    ));
   }
 
-  delete(id: number): Promise<boolean> {
+  delete(id: string): Promise<boolean> {
     return this.forms.delete(id);
   }
 }
