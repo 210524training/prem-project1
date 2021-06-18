@@ -3,7 +3,7 @@ import FormDAO from '../DAO/formDAO';
 
 export class FormService {
   constructor(
-		public forms = FormDAO,
+    public forms = FormDAO,
   ) {}
 
   // eslint-disable-next-line class-methods-use-this
@@ -77,6 +77,69 @@ export class FormService {
 
   delete(id: string): Promise<boolean> {
     return this.forms.delete(id);
+  }
+
+  changeToEmployee(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, 'To Employee', form.approvedBy,
+    ));
+  }
+
+  changeToSuper(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, 'To Super', form.approvedBy,
+    ));
+  }
+
+  changeToHead(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, 'To Head', form.approvedBy,
+    ));
+  }
+
+  changeToCoordinator(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, 'To Coordinator', form.approvedBy,
+    ));
+  }
+
+  changeApprovedToSuper(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, form.formStatus, 'Super',
+    ));
+  }
+
+  changeApprovedToHead(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, form.formStatus, 'Head',
+    ));
+  }
+
+  changeApprovedToCoordinator(form: Form): Promise<boolean> {
+    return this.update(new Form(
+      form.formId, form.name, form.email, form.submissionDate,
+      form.eventDate, form.time, form.location, form.description,
+      form.cost, form.gradingFormat, form.finalGrade, form.gradeSatisfaction,
+      form.urgency, form.eventType, form.attached, form.formStatus, 'Coordinator',
+    ));
   }
 }
 

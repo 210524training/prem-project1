@@ -24,7 +24,7 @@ export class UserService {
       user.password,
       user.role,
       user.email,
-      user.formId,
+      user.forms,
     ));
   }
 
@@ -38,7 +38,7 @@ export class UserService {
       user.password,
       user.role,
       user.email,
-      user.formId,
+      user.forms,
     ));
   }
 

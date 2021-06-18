@@ -4,6 +4,7 @@
 // role
 // email
 // form id
+import Form from './form';
 
 export type Role = 'Employee' | 'Supervisor' | 'Head' | 'Co';
 
@@ -13,6 +14,6 @@ export default class User {
 		public password: string,
 		public role: Role,
 		public email: string,
-		public formId: [],
+		public forms: Form[],
   ) {}
 }
