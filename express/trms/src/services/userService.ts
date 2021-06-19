@@ -42,6 +42,12 @@ export class UserService {
     ));
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  addFormToUser(user: User, id: string): void {
+    const getUser = user;
+    getUser.forms.push(id);
+  }
+
   delete(username: string): Promise<boolean> {
     return this.users.delete(username);
   }

@@ -1,7 +1,7 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import log from '../log';
 import User from '../models/user';
 import docClient from '../connection/dataConnection';
+import { UserNotFoundError } from '../error/errors';
 
 export class UserDAO {
   constructor(
@@ -22,7 +22,7 @@ export class UserDAO {
     }
   }
 
-  async findByUsername(username: string): Promise<User | undefined> {
+  async findByUsername(username: string): Promise<User> {
     const params: DocumentClient.GetItemInput = {
       TableName: 'userTable',
       Key: {
@@ -38,11 +38,10 @@ export class UserDAO {
       },
     };
     const data = await this.dynamo.get(params).promise();
-    const newUser = new User(
-      data.Item?.username, data.Item?.password, data.Item?.role,
-      data.Item?.email, data.Item?.formId,
-    );
-    return newUser;
+    if(!data) {
+      throw new UserNotFoundError();
+    }
+    return data.Item as User;
   }
 
   async update(user: User): Promise<boolean> {

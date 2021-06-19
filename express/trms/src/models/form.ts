@@ -12,11 +12,12 @@
 
 export type EventType = 'Course' | 'Seminar' | 'Certification Prep' | 'Certification' | 'Tech Training' | 'Other';
 export type FormStatus = 'To Employee' | 'To Super' | 'To Head' | 'To Coordinator' | 'Approved';
-export type Approval = 'Pending' | 'Super' | 'Head' | 'Coordinator';
+export type Approval = 'Pending' | 'Super' | 'Head' | 'Coordinator' | 'Rejected';
 
 export default class Reimbursement {
   constructor(
 		public formId: string,
+		public username: string,
 		public name: string,
 		public email: string,
 		public submissionDate: Date,
@@ -27,6 +28,7 @@ export default class Reimbursement {
 		public cost: number,
 		public gradingFormat: 'Score' | 'Presentation',
 		public finalGrade: string | undefined,
+		public gradeCutoff: string,
 		public gradeSatisfaction: boolean | undefined,
 		public urgency: boolean,
 		public eventType: EventType,
