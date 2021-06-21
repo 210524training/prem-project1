@@ -32,7 +32,7 @@ export default class Reimbursement {
 		public gradeSatisfaction: boolean | undefined,
 		public urgency: boolean,
 		public eventType: EventType,
-		public attached: {} | undefined,
+		public attached: File | undefined,
 		public formStatus: FormStatus,
 		public approvedBy: Approval,
   ) {}
