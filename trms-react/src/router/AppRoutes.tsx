@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import HomePage from '../components/pages/HomePage';
-import LoginPage from "../components/pages/LoginPage";
-import RegisterPage from "../components/pages/RegisterPage";
-import TuitionFormPage from "../components/pages/TuitionFormPage";
+import HomePage from '../components/pages/home/HomePage';
+import LoginPage from "../components/pages/login/LoginPage";
+import RegisterPage from "../components/pages/register/RegisterPage";
+import TuitionFormPage from "../components/pages/form/TuitionFormPage";
 
 const AppRoutes: React.FC<unknown> = (props) => {
 	return (

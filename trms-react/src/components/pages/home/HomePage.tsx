@@ -1,6 +1,7 @@
 import React from 'react';
-import { useAppSelector } from '../../hooks';
-import { selectUser, UserState } from '../../slices/user.slice';
+import { useAppSelector } from '../../../hooks';
+import { selectUser, UserState } from '../../../slices/user.slice';
+import './HomePage.css';
 
 type Props = {}
 
@@ -9,6 +10,7 @@ const HomePage: React.FC<Props> = (props) => {
 
 	return (
 		<>
+			<div id="banner" className="banner" />
 			
 		</>
 	);
