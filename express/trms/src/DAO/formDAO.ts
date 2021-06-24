@@ -1,5 +1,4 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import log from '../log';
 import Form from '../models/form';
 import docClient from '../connection/dataConnection';
 
@@ -36,6 +35,18 @@ export class ReimbDAO {
     };
     const result = await this.dynamo.get(params).promise();
     return result.Item as Form;
+  }
+
+  async getByUsername(username: string): Promise<Form[]> {
+    const params: DocumentClient.ScanInput = {
+      TableName: 'formTable',
+      FilterExpression: 'username = :u',
+      ExpressionAttributeValues: {
+        ':u': username,
+      },
+    };
+    const result = await this.dynamo.scan(params).promise();
+    return result.Items as Form[];
   }
 
   async getFormsByStatus(formStatus: string): Promise<Form[]> {

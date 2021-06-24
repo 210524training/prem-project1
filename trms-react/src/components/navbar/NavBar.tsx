@@ -25,12 +25,30 @@ const NavBar: React.FC<Props> = (props) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/user/forms">My Forms</NavLink>
-            </li>
-            <li className="nav-item">
+            { !user ? (
+              <li className="nav-item">
               <NavLink className="nav-link" to="/forms">Create a New Form</NavLink>
             </li>
+            ) : user?.role === 'Employee' ? (
+                <>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/user/forms">My Forms</NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/forms">Create a New Form</NavLink>
+                  </li>
+                </>
+              ) : user?.role === 'Supervisor' || 'Head' || 'Co' ? (
+                <>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/user/forms">My Forms</NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/forms">Create a New Form</NavLink>
+                  </li>
+                </>
+              ) : ('')
+            }
           </ul>
           <ul className="navbar-nav ms-auto">
             { !user ? (

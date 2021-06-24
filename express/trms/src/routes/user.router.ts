@@ -23,6 +23,7 @@ userRouter.get('/:username', async (req, res) => {
 });
 
 userRouter.post('/', async (req: express.Request<unknown, unknown, User, unknown, {}>, res) => {
+  console.log('On user router');
   res.json(
     await userService.addUser(req.body),
   );

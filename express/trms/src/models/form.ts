@@ -11,7 +11,7 @@
 // event type
 
 export type EventType = 'Course' | 'Seminar' | 'Certification Prep' | 'Certification' | 'Tech Training' | 'Other';
-export type FormStatus = 'To Employee' | 'To Super' | 'To Head' | 'To Coordinator' | 'Approved';
+export type FormStatus = 'Employee' | 'Super' | 'Head' | 'Coordinator' | 'Approved';
 export type Approval = 'Pending' | 'Super' | 'Head' | 'Coordinator' | 'Rejected';
 
 export default class Reimbursement {

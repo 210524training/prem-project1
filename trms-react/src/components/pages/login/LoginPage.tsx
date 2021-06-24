@@ -1,14 +1,18 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useAppDispatch } from "../../../hooks";
-import { loginAsync } from "../../../slices/user.slice";
+import User from "../../../models/user";
+import { sendLogin } from "../../../remote/trms.api";
 
-const LoginPage: React.FC<unknown> = (props) => {
+type Props = {
+	currentUser: User | undefined,
+	setCurrentUser: Dispatch<SetStateAction<User | undefined>>
+}
+
+const LoginPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 
 	const [username, setUsername] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 
-	const dispatch = useAppDispatch();
 	const history = useHistory();
 
 	const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +25,7 @@ const LoginPage: React.FC<unknown> = (props) => {
 
 	const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		await dispatch(loginAsync({username, password}));
+		await sendLogin(username, password);
 		history.push('/');
 	}
 	return (

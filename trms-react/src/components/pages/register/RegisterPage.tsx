@@ -1,11 +1,14 @@
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import tuitionClient from "../../../remote/trms.client";
+import { useHistory } from "react-router-dom";
+import { sendRegister } from "../../../remote/trms.api";
 
 const RegisterPage: React.FC<unknown> = (props) => {
 
 	const [username, setUsername] = useState<string>();
 	const [password, setPassword] = useState<string>();
 	const [email, setEmail] = useState<string>();
+
+	const history = useHistory();
 	
 	const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setUsername(e.target.value);
@@ -21,16 +24,9 @@ const RegisterPage: React.FC<unknown> = (props) => {
 
 	const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const response = await tuitionClient.post<boolean>('/api/v1/users', {
-			username,
-			password,
-			role: 'Employee',
-			email,
-		});
-		console.log(response.data);
+		await sendRegister(username, password, email);
+		history.push('/');
 	}
-	console.log('username; ', username);
-	console.log('password; ', password);
 
 	return (
 		<div className="container">

@@ -41,7 +41,7 @@ export class FormService {
       isUrgent,
       form.eventType,
       form.attached,
-      'To Super',
+      'Super',
       'Pending',
     ));
     const getUser = await this.users.findByUsername(form.username);
@@ -53,6 +53,10 @@ export class FormService {
 
   getById(id: string): Promise<Form | undefined> {
     return this.forms.getById(id);
+  }
+
+  getByUsername(username: string): Promise<Form[]> {
+    return this.forms.getByUsername(username);
   }
 
   getFormsByStatus(formStatus: string): Promise<Form[]> {
@@ -90,15 +94,6 @@ export class FormService {
   delete(id: string): Promise<boolean> {
     return this.forms.delete(id);
   }
-
-  // changeStatus(form: Form, status: FormStatus, approvedBy: Approval): Promise<boolean> {
-  //   return this.update(new Form(
-  //     form.formId, form.name, form.email, form.submissionDate,
-  //     form.eventDate, form.time, form.location, form.description,
-  //     form.cost, form.gradingFormat, form.finalGrade, form.gradeCutoff, form.gradeSatisfaction,
-  //     form.urgency, form.eventType, form.attached, status, approvedBy,
-  //   ));
-  // }
 }
 
 export default new FormService();

@@ -10,10 +10,23 @@ formRouter.get('/', async (req, res) => {
   );
 });
 
+formRouter.get('/:formStatus', async (req, res) => {
+  res.json(
+    await formService.getFormsByStatus(req.body),
+  );
+});
+
 formRouter.get('/:formId', async (req, res) => {
   const { formId } = req.params;
   res.json(
     await formService.getById(formId),
+  );
+});
+
+formRouter.get('/:username', async (req, res) => {
+  const { username } = req.params;
+  res.json(
+    await formService.getByUsername(username),
   );
 });
 
