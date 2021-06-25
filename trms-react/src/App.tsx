@@ -18,7 +18,7 @@ const App: React.FC = (): JSX.Element => {
   return (
     <Provider store={store}>
       <Router>
-        <NavBar />
+        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
         <AppRoutes currentUser={currentUser} setCurrentUser={setCurrentUser} 
           currentForm={currentForm} setCurrentForm={setCurrentForm} />
         <Footer />

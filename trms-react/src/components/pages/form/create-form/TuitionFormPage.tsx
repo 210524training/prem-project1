@@ -1,8 +1,9 @@
 import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
-import { EventType } from '../../../../models/form';
+import { useHistory } from 'react-router-dom';
 import User from '../../../../models/user';
 import { sendNewForm } from '../../../../remote/trms.api';
 import './TuitionFormPage.css';
+
 type Props = {
 	currentUser: User | undefined,
 	setCurrentUser: Dispatch<SetStateAction<User | undefined>>
@@ -10,75 +11,78 @@ type Props = {
 
 const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 
-	const [username, setUsername] = useState<string>();
-	const [name, setName] = useState<string>();
-	const [email, setEmail] = useState<string>();
-	const [submissionDate, setSubmissionDate] = useState<string>();
-	const [eventDate, setEventDate] = useState<string>();
-	const [time, setTime] = useState<string>();
-	const [location, setLocation] = useState<string>();
-	const [description, setDescription] = useState<string>();
-	const [cost, setCost] = useState<string>();
-	const [gradingFormat, setGradeFormat] = useState<string>();
-	const [gradeCutoff, setGradeCutoff] = useState<string>();
-	const [eventType, setEventType] = useState<string>();
-	const [attached, setAttached] = useState<{}>();
+	const [username, setUsername] = useState<string>('');
+	const [name, setName] = useState<string>('');
+	const [email, setEmail] = useState<string>('');
+	const [submissionDate, setSubmissionDate] = useState<string>('');
+	const [eventDate, setEventDate] = useState<string>('');
+	const [time, setTime] = useState<string>('');
+	const [location, setLocation] = useState<string>('');
+	const [description, setDescription] = useState<string>('');
+	const [cost, setCost] = useState<string>('');
+	const [gradingFormat, setGradeFormat] = useState<string>('');
+	const [gradeCutoff, setGradeCutoff] = useState<string>('');
+	const [eventType, setEventType] = useState<string>('');
+	const [attached, setAttached] = useState<File | string | null>(null);
+	const [total, setTotal] = useState<number>(0);
 
-
+	const history = useHistory();
 
 	const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setUsername(e.target.value);
-	}
+	};
 
 	const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setName(e.target.value);
-	}
+	};
 
 	const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setEmail(e.target.value);
-	}
+	};
 
 	const handleSubmissionDateChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setSubmissionDate(e.target.value);
-	}
+	};
 
 	const handleEventDateChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setEventDate(e.target.value);
-	}
+	};
 
 	const handleTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setTime(e.target.value);
-	}
+	};
 
 	const handleLocationChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setLocation(e.target.value);
-	}
+	};
 
 	const handleDescriptionChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setDescription(e.target.value);
-	}
+	};
 
 	const handleCostChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setCost(e.target.value);
-	}
+	};
 
 	const handleGradeFormatChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setGradeFormat(e.target.value);
-	}
+	};
 
 	const handleGradeCutoffChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setGradeCutoff(e.target.value);
-	}
+	};
 
 	const handleEventTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setEventType(e.target.value);
-	}
+	};
 
 	const handleAttachedChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setAttached(e.target.value);
-	}
+		if(e.target.files){
+			setAttached(e.target.files[0].name);
+		}
+	};
 
-	const refundAmount = (cost: number, eventType: EventType): number => {
+	const refundAmount = (cost: number, eventType: string): number => {
 		let total = 0;
 		switch(eventType) {
 			case 'Course':
@@ -100,24 +104,38 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 				total = cost * 0.3;
 				break;
 		}
-		// const awardTotal = CalculateAmount(total);
-		return 0; // awardTotal;
+		const awardTotal = calculateAmount(total);
+		setTotal(awardTotal);
+		return awardTotal;
 	}
 
-
+	const calculateAmount = (max: number): number => {
+		const tempCost = Number(cost);
+		let currentFunds
+		if(currentUser) {
+			currentFunds = 1000 - tempCost;
+			if(currentFunds < max) {
+				return 1000;
+			}
+		}
+		return max;
+	}
 
 	const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		await sendNewForm(
-			undefined, username, name, email, submissionDate, eventDate, time, location, description,
-			cost, gradingFormat, undefined, gradeCutoff, undefined, undefined, eventType,
-			attached, undefined, undefined,
+			null, username, name, email, submissionDate, eventDate, time, location, description,
+			cost, gradingFormat, null, gradeCutoff, null, null, eventType,
+			attached, null, null,
 		);
+		history.push('/');
 	}
 
 	return (
 		<div className="container">
-			<div className=" text-center mt-5 ">
+			<div className=" text-center mt-5">
+				{/* <p>Reimbursement: {(() => refundAmount(Number(cost), eventType))()}</p> */}
+				<br></br>
 				<br></br>
 				<h1>New Tuition Reimbursement Form</h1>
 			</div>
@@ -151,7 +169,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="current-date">Current Date *</label>
-									<input id="current-date" type="text" name="fullname" className="form-control" placeholder="Current Date"
+									<input id="current-date" type="date" name="fullname" className="form-control" placeholder="Current Date"
 										required data-error="Current is required." onChange={handleSubmissionDateChange} />
 								</div>
 							</div>
@@ -160,14 +178,14 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="start-date">Start Date *</label>
-									<input id="start-date" type="text" name="start-date" className="form-control" placeholder="Start Date"
+									<input id="start-date" type="date" name="start-date" className="form-control" placeholder="Start Date"
 										required data-error="Start Date is required." onChange={handleEventDateChange} />
 								</div>
 							</div>
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="time">Time *</label>
-									<input id="time" type="text" name="time" className="form-control" placeholder="Event Time"
+									<input id="time" type="time" name="time" className="form-control" placeholder="Event Time"
 										required data-error="Time is required." onChange={handleTimeChange} />
 								</div>
 							</div>
@@ -235,7 +253,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 									<br></br>
     							<label htmlFor="file-upload" className="p-3">Upload Files</label>
 									<input type="file" className="custom-file-input" id="inputGroupFile01"
-      							aria-describedby="inputGroupFileAddon01" multiple />
+      							aria-describedby="inputGroupFileAddon01" multiple onChange={handleAttachedChange} />
   							</div>
 							</div>
 							<div className="col-md-12">

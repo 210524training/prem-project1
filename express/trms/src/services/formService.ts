@@ -1,7 +1,6 @@
 import Form from '../models/form';
 import FormDAO from '../DAO/formDAO';
 import UserDAO from '../DAO/userDAO';
-import userService from './userService';
 
 export class FormService {
   constructor(
@@ -10,44 +9,64 @@ export class FormService {
   ) {}
 
   // eslint-disable-next-line class-methods-use-this
-  urgency(currentDate: Date, eventDate: Date): boolean {
+  urgency(currentDate: string, eventDate: string): boolean {
+    const current = new Date(currentDate);
     const changeDate = new Date(eventDate);
     const checkDate = changeDate.getDate() - 14;
-    if(currentDate.getDate() < checkDate) {
+    if(current.getDate() < checkDate) {
       return false;
     }
     return true;
   }
 
-  async addForm(form: Form): Promise<boolean> {
-    const subDate = new Date();
+  async addForm(
+    formId: string,
+    username: string,
+    name: string,
+    email: string,
+    sDate: string,
+    eventDate: string,
+    time: string,
+    location: string,
+    description: string,
+    oldCost: string,
+    gradingFormat: string,
+    finalGrade: string | null,
+    gradeCutoff: string,
+    gradeSatisfaction: string | null,
+    urgency: boolean | null,
+    eventType: string,
+    attached: File | null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    formStatus: string | null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    approvedBy: string | null,
+  ): Promise<boolean> {
+    const cost = Number(oldCost);
     const id = Math.random().toString(36).substring(8);
-    const isUrgent = this.urgency(subDate, form.eventDate);
+    const isUrgent = this.urgency(sDate, eventDate);
+
     const userForm = this.forms.addForm(new Form(
       id,
-      form.username,
-      form.name,
-      form.email,
-      subDate,
-      form.eventDate,
-      form.time,
-      form.location,
-      form.description,
-      form.cost,
-      form.gradingFormat,
-      undefined,
-      form.gradeCutoff,
-      undefined,
+      username,
+      name,
+      email,
+      sDate,
+      eventDate,
+      time,
+      location,
+      description,
+      cost,
+      gradingFormat,
+      ' ',
+      gradeCutoff,
+      null,
       isUrgent,
-      form.eventType,
-      form.attached,
-      'Super',
+      eventType,
+      attached,
+      'Supervisor',
       'Pending',
     ));
-    const getUser = await this.users.findByUsername(form.username);
-    if(getUser) {
-      userService.addFormToUser(getUser, id);
-    }
     return userForm;
   }
 
@@ -68,6 +87,7 @@ export class FormService {
   }
 
   update(form: Form): Promise<boolean> {
+    console.log(form.finalGrade);
     return this.forms.update(new Form(
       form.formId,
       form.username,

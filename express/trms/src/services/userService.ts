@@ -22,9 +22,9 @@ export class UserService {
     return this.users.addUser(new User(
       user.username,
       user.password,
-      user.role,
+      'Employee',
       user.email,
-      user.forms,
+      [],
     ));
   }
 
@@ -40,12 +40,6 @@ export class UserService {
       user.email,
       user.forms,
     ));
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  addFormToUser(user: User, id: string): void {
-    const getUser = user;
-    getUser.forms.push(id);
   }
 
   delete(username: string): Promise<boolean> {

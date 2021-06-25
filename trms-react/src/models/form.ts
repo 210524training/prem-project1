@@ -1,25 +1,25 @@
-export type EventType = 'Course' | 'Seminar' | 'Certification Prep' | 'Certification' | 'Tech Training' | 'Other';
-export type FormStatus = 'Employee' | 'Super' | 'Head' | 'Coordinator' | 'Approved';
-export type Approval = 'Pending' | 'Super' | 'Head' | 'Coordinator' | 'Rejected';
+// export type EventType = 'Course' | 'Seminar' | 'Certification Prep' | 'Certification' | 'Tech Training' | 'Other';
+// export type FormStatus = 'Employee' | 'Super' | 'Head' | 'Coordinator' | 'Approved';
+// export type Approval = 'Pending' | 'Super' | 'Head' | 'Coordinator' | 'Rejected';
 
 export default interface Form {
     formId: string,
     username: string,
     name: string,
     email: string,
-    submissionDate: Date,
-    eventDate: Date,
-    time: Date,
+    submissionDate: string,
+    eventDate: string,
+    time: string,
     location: string,
     description: string,
     cost: number,
-    gradingFormat: 'Score' | 'Presentation',
-    finalGrade: string | undefined,
+    gradingFormat: string,
+    finalGrade: string | null,
     gradeCutoff: string,
-    gradeSatisfaction: boolean | undefined,
+    gradeSatisfaction: string | null,
     urgency: boolean,
-    eventType: EventType,
-    attached: File | undefined,
-    formStatus: FormStatus,
-    approvedBy: Approval,
+    eventType: string,
+    attached: File | null,
+    formStatus: string,
+    approvedBy: string,
 }

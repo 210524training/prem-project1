@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { logout, selectUser, UserState } from '../../slices/user.slice';
+import User from '../../models/user';
 import './NavBar.css';
 
-type Props = {}
+type Props = {
+  currentUser: User | undefined,
+  setCurrentUser: Dispatch<SetStateAction<User | undefined>>,
+}
 
-const NavBar: React.FC<Props> = (props) => {
+const NavBar: React.FC<Props> = ({currentUser, setCurrentUser}) => {
   const history = useHistory();
-	const dispatch = useAppDispatch();
-	const user = useAppSelector<UserState>(selectUser);
+  console.log(currentUser);
 
 	const handleLogout = () => {
-		dispatch(logout());
+    setCurrentUser(undefined);
 		history.push('/');
 	}
 
 	return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top m-2">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-secondary m-2">
       <div id="nav" className="container-fluid">
         <NavLink className="navbar-brand" to="/">Tuition Reimbursement</NavLink>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -25,11 +26,11 @@ const NavBar: React.FC<Props> = (props) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <ul className="navbar-nav">
-            { !user ? (
+            { !currentUser ? (
               <li className="nav-item">
-              <NavLink className="nav-link" to="/forms">Create a New Form</NavLink>
+              <NavLink className="nav-link" to="/login">Create a New Form</NavLink>
             </li>
-            ) : user?.role === 'Employee' ? (
+            ) : currentUser.role === 'Employee' ? (
                 <>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/user/forms">My Forms</NavLink>
@@ -38,7 +39,7 @@ const NavBar: React.FC<Props> = (props) => {
                     <NavLink className="nav-link" to="/forms">Create a New Form</NavLink>
                   </li>
                 </>
-              ) : user?.role === 'Supervisor' || 'Head' || 'Co' ? (
+              ) : currentUser.role === 'Supervisor' || 'Head' || 'Co' ? (
                 <>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/user/forms">My Forms</NavLink>
@@ -51,7 +52,7 @@ const NavBar: React.FC<Props> = (props) => {
             }
           </ul>
           <ul className="navbar-nav ms-auto">
-            { !user ? (
+            { !currentUser ? (
               <>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/login">Login</NavLink>

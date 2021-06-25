@@ -25,7 +25,8 @@ const LoginPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 
 	const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		await sendLogin(username, password);
+		const user = await sendLogin(username, password);
+		setCurrentUser(user);
 		history.push('/');
 	}
 	return (

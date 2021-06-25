@@ -31,11 +31,11 @@ const AppRoutes: React.FC<Props> = ({currentUser, setCurrentUser, currentForm, s
 			<Route exact path='/register'>
 				<RegisterPage />
 			</Route>
-			<Route exact path='/user/my-forms'>
+			<Route exact path='/user/forms'>
 				<FormDisplay currentUser={currentUser} setCurrentForm={setCurrentForm} />
 			</Route>
-			<Route exact path={'/user/forms/:formId'}>
-				<FormEdits currentForm={currentForm} setCurrentForm={setCurrentForm} />
+			<Route exact path={'/current-form/:formId'}>
+				<FormEdits currentForm={currentForm} currentUser={currentUser} />
 			</Route>
 		</Switch>
 	);

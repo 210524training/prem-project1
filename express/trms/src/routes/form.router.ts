@@ -10,9 +10,10 @@ formRouter.get('/', async (req, res) => {
   );
 });
 
-formRouter.get('/:formStatus', async (req, res) => {
+formRouter.get('/:formStatus/get-forms', async (req, res) => {
+  const { formStatus } = req.params;
   res.json(
-    await formService.getFormsByStatus(req.body),
+    await formService.getFormsByStatus(formStatus),
   );
 });
 
@@ -23,22 +24,35 @@ formRouter.get('/:formId', async (req, res) => {
   );
 });
 
-formRouter.get('/:username', async (req, res) => {
+formRouter.get('/:username/user', async (req, res) => {
   const { username } = req.params;
+  console.log(username);
   res.json(
     await formService.getByUsername(username),
   );
 });
 
-formRouter.post('/', async (req: express.Request<unknown, unknown, Form, unknown, {}>, res) => {
+formRouter.post('/', async (req, res) => {
+  const {
+    formId, username, name, email, submissionDate, eventDate, time, location,
+    description, cost, gradingFormat, finalGrade, gradeCutoff, gradeSatisfaction, urgency,
+    eventType, attached, formStatus, approvedBy,
+  } = req.body;
+
   res.json(
-    await formService.addForm(req.body),
+    await formService.addForm(
+      formId, username, name, email, submissionDate, eventDate, time, location, description, cost,
+      gradingFormat, finalGrade, gradeCutoff, gradeSatisfaction, urgency, eventType, attached,
+      formStatus, approvedBy,
+    ),
   );
 });
 
-formRouter.put('/', async (req: express.Request<unknown, unknown, Form, unknown, {}>, res) => {
+formRouter.put('/update', async (req, res) => {
+  const { form } = req.body;
+  console.log(form);
   res.json(
-    await formService.update(req.body),
+    await formService.update(form),
   );
 });
 

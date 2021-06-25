@@ -25,28 +25,29 @@ export const getFormsByStatus = async (formStatus: string | undefined): Promise<
 }
 
 export const sendNewForm = async (
-	formId: string | undefined, username: string | undefined, name: string | undefined, email: string | undefined,
-	submissionDate: string | undefined, eventDate: string | undefined, time: string | undefined, location: string | undefined,
-	description: string | undefined, cost: string | undefined, gradingFormat: string | undefined,
-	finalGrade: string | undefined, gradeCutoff: string | undefined, gradeSatisfaction: string | undefined,
-	urgency: string | undefined, eventType: string | undefined, attached: {} | undefined,
-	formStatus: string | undefined, approvedBy: string | undefined,
+	formId: string | null, username: string | null, name: string | null, email: string | null,
+	submissionDate: string | null, eventDate: string | null, time: string | null, location: string | null,
+	description: string | null, cost: string | null, gradingFormat: string | null,
+	finalGrade: string | null, gradeCutoff: string | null, gradeSatisfaction: string | null,
+	urgency: boolean | null, eventType: string | null, attached: File | string | null,
+	formStatus: string | null, approvedBy: string | null,
 	): Promise<Form> => {
-		let newCost = Number(cost);
-
 		const {data: form} = await tuitionClient.post<Form>('/api/v1/forms', {
-			formId, username, name, email, submissionDate, eventDate, time, location, description, newCost, gradingFormat,
+			formId, username, name, email, submissionDate, eventDate, time, location, description, cost, gradingFormat,
 			finalGrade, gradeCutoff, gradeSatisfaction, urgency, eventType, attached, formStatus, approvedBy,
 		});
 	return form;
 }
 
-export const getByUsername = async (username: string): Promise<Form[]> => {
-	const {data: forms} = await tuitionClient.get<Form[]>(`/api/v1/forms/${username}`);
+export const getByUsername = async (username: string | null): Promise<Form[]> => {
+	const {data: forms} = await tuitionClient.get<Form[]>(`/api/v1/forms/${username}/user`);
 	return forms as Form[];
 }
 
 export const updateForm = async (form: Form): Promise<Form> => {
-	const {data: forms} = await tuitionClient.put<Form>('/api/v1/forms');
+	console.log(form.finalGrade);
+	const {data: forms} = await tuitionClient.put<Form>('/api/v1/forms/update', {
+		form,
+	});
 	return forms;
 }

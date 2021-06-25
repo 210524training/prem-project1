@@ -15,16 +15,38 @@ const params: AWS.DynamoDB.CreateTableInput = {
 	AttributeDefinitions: [
 		{
 			AttributeName: 'formId',
-			AttributeType: 'N'
+			AttributeType: 'S'
+		},
+		{
+			AttributeName: 'username',
+			AttributeType: 'S'
 		}
 	],
 	ProvisionedThroughput: {
 		ReadCapacityUnits: 3,
 		WriteCapacityUnits: 3
-},
+	},
 	StreamSpecification: {
 		StreamEnabled: false
-	}
+	},
+	GlobalSecondaryIndexes: [
+		{
+			IndexName: 'username',
+			KeySchema: [
+				{
+					AttributeName: 'username',
+					KeyType: 'HASH'
+				}
+			],
+			Projection: {
+				ProjectionType: 'ALL'
+			},
+			ProvisionedThroughput: {
+				ReadCapacityUnits: 2,
+				WriteCapacityUnits: 2
+			}
+		}
+	]
 };
 
 dynamo.createTable(params, (err, data) => {

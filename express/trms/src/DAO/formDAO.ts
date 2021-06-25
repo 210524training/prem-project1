@@ -1,6 +1,7 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import Form from '../models/form';
 import docClient from '../connection/dataConnection';
+import log from '../log';
 
 export class ReimbDAO {
   constructor(
@@ -21,6 +22,7 @@ export class ReimbDAO {
       await this.dynamo.put(params).promise();
       return true;
     } catch(error) {
+      log.debug(error);
       console.log('Failed to add form');
       return false;
     }
@@ -45,11 +47,17 @@ export class ReimbDAO {
         ':u': username,
       },
     };
-    const result = await this.dynamo.scan(params).promise();
-    return result.Items as Form[];
+    try {
+      const result = await this.dynamo.scan(params).promise();
+      return result.Items as Form[];
+    } catch(error) {
+      log.debug(error);
+      return [];
+    }
   }
 
   async getFormsByStatus(formStatus: string): Promise<Form[]> {
+    console.log(formStatus);
     const params: DocumentClient.ScanInput = {
       TableName: 'formTable',
       FilterExpression: '#s = :s',
@@ -60,11 +68,13 @@ export class ReimbDAO {
         ':s': formStatus,
       },
     };
-    const result = await this.dynamo.scan(params).promise();
-    if(result.Items) {
+    try {
+      const result = await this.dynamo.scan(params).promise();
       return result.Items as Form[];
+    } catch(error) {
+      log.debug(error);
+      return [];
     }
-    return [];
   }
 
   async getAll(): Promise<Form[]> {
