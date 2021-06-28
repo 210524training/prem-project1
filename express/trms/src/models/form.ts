@@ -28,13 +28,14 @@ export default class Reimbursement {
 		public description: string,
 		public cost: number,
 		public gradingFormat: string,
-		public finalGrade: string | null,
+		public finalGrade: string | '',
 		public gradeCutoff: string,
-		public gradeSatisfaction: string | null,
+		public gradeSatisfaction: string | '',
 		public urgency: boolean,
 		public eventType: string,
 		public attached: File | null,
 		public formStatus: string,
 		public approvedBy: string,
+		public comment: string,
   ) {}
 }

@@ -11,10 +11,19 @@ type Props = {
 
 const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 
-  const [finalGrade, setFinalGrade] = useState<string>('');
+  const [finalGrade, setFinalGrade] = useState<string>(currentForm?.finalGrade || '');
   const [gradeSatisfaction, setGradeSatisfaction] = useState<string>('');
-  const [formStatus, setFormStatus] = useState<string>('');
-  const [approvedBy, setApprovedBy] = useState<string>('');
+  const [formStatus, setFormStatus] = useState<string>(currentForm?.formStatus || '');
+  const [approvedBy, setApprovedBy] = useState<string>(currentForm?.approvedBy || '');
+	const [comment, setComment] = useState<string>(currentForm?.comment || '');
+	// const [eventDate, setEventDate] = useState<string>(currentForm?.eventDate || '');
+	// const [time, setTime] = useState<string>(currentForm?.time || '');
+	// const [location, setLocation] = useState<string>(currentForm?.location || '');
+	// const [description, setDescription] = useState<string>(currentForm?.description || '');
+	// const [cost, setCost] = useState<number>(currentForm?.cost || 0);
+	// const [gradingFormat, setGradeFormat] = useState<string>(currentForm?.gradingFormat || '');
+	// const [gradeCutoff, setGradeCutoff] = useState<string>(currentForm?.gradeCutoff || '');
+	// const [eventType, setEventType] = useState<string>(currentForm?.eventType || '');
 
   const history = useHistory();
 
@@ -30,56 +39,78 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
     setGradeSatisfaction(e.target.value);
   };
 
-  const  handleFormStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleFormStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormStatus(e.target.value);
   };
 
-  const handleApprovalChange = (role: string | undefined) => {
-    switch (role) {
-			case "Supervisor":
-				setApprovedBy(role);
-				setFormStatus("Head");
-				break;
-			case "Head":
-				setApprovedBy(role);
-				setFormStatus("Co");
-				break;
-			case "Co":
-				setApprovedBy("Approved");
-				setFormStatus("Approved");
+	const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setComment(e.target.value);
+	};
+
+  const handleApprovalChange = (role: string | undefined, status: string) => {
+		if(status === 'Approved') {
+			switch (role) {
+				case "Employee":
+					if(approvedBy === "Pending"){
+						setFormStatus("Supervisor");
+					} else if(approvedBy === "Supervisor"){
+						setFormStatus("Head");
+					} else if(approvedBy === "Head"){
+						setFormStatus("Co");
+					}
+					break;
+				case "Supervisor":
+					if(approvedBy === "Head"){
+						setFormStatus("Co");
+					} else {
+						setApprovedBy(role);
+						setFormStatus("Head");
+					}
+					break;
+				case "Head":
+					setApprovedBy(role);
+					setFormStatus("Co");
+					break;
+				case "Co":
+					setApprovedBy("Approved");
+					setFormStatus("Approved");
+			}
+		} else {
+			setApprovedBy("Rejected");
+			setFormStatus("Rejected");
 		}
   };
-
-	const handleReject = () => {
-		setApprovedBy("Rejected");
-		setFormStatus("Rejected");
-	}
 
   const handleFormUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const updatedForm = {
-    formId: currentForm?.formId,
-    username: currentForm?.username,
-    name: currentForm?.name,
-    email: currentForm?.email,
-    submissionDate: currentForm?.submissionDate,
-    eventDate: currentForm?.eventDate,
-    time: currentForm?.time,
-    location: currentForm?.location,
-    description: currentForm?.description,
-    cost: currentForm?.cost,
-    gradingFormat: currentForm?.gradingFormat,
-    finalGrade,
-    gradeCutoff: currentForm?.gradeCutoff,
-    gradeSatisfaction,
-    urgency: currentForm?.urgency,
-    eventType: currentForm?.eventType,
-    attached: currentForm?.attached,
-    formStatus,
-    approvedBy,
-    };
-    await updateForm(updatedForm);
+		console.log(approvedBy);
+		console.log(formStatus);
+
+		let updated = {
+			formId: currentForm?.formId,
+			username: currentForm?.username,
+			name: currentForm?.name,
+			email: currentForm?.email,
+			submissionDate: currentForm?.submissionDate,
+			eventDate: currentForm?.eventDate,
+			time: currentForm?.time,
+			location: currentForm?.location,
+			description: currentForm?.description,
+			cost: currentForm?.cost,
+			gradingFormat: currentForm?.gradingFormat,
+			finalGrade,
+			gradeCutoff: currentForm?.gradeCutoff,
+			gradeSatisfaction,
+			urgency: currentForm?.urgency,
+			eventType: currentForm?.eventType,
+			attached: currentForm?.attached,
+			formStatus,
+			approvedBy,
+			comment,
+		}
+
+    await updateForm(updated);
     history.push('/user/forms');
   }
 
@@ -173,7 +204,7 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 								<div className="col-md-6">
 									<div className="form-group">
 										<label htmlFor="grade-format">Final Grade</label>
-										<input type="text" id="form_need" name="need" className="form-control" value={finalGrade} />
+										<input type="text" id="form_need" name="need" className="form-control" value={currentForm.finalGrade} />
 									</div>
 								</div>
 							</div>
@@ -201,8 +232,12 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 						currentUser?.role ==='Employee' ? (
 							<>
 								<label htmlFor="final-grade">Final Grade *</label>
-								<input type="text" className="form-control" placeholder="Final Grade"
-									required data-error="Please Enter a grade" onChange={hanldeFinalGradeChange} />
+								<input type="text" className="form-control" placeholder="Final Grade" onChange={hanldeFinalGradeChange} />
+								<div className="col-md-12">
+									<br></br>
+									<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Approve Changes"
+										onClick={() => handleApprovalChange(currentUser?.role, 'Approved')}>Approve Changes</button>
+								</div>
 							</>
 						) : currentUser?.role ==='Supervisor' || 'Head' || 'Co' ? (
 							<>
@@ -217,15 +252,19 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 								</div>
 								<div className="col-md-12">
 									<br></br>
-									<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Approved" onClick={() => handleApprovalChange(currentUser?.role)}>Approve</button>
+									<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Approved" onClick={() => handleApprovalChange(currentUser?.role, 'Approved')}>Approve</button>
+								</div>
+								<div className="col-md-12">
+									<br></br>
+									<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Reject" onClick={() => handleApprovalChange(currentUser?.role, 'Rejected')}>Reject</button>
+								</div>
+								<div className="form-group">
+									<label htmlFor="form_comment">Comments</label>
+									<input type="text" id="form_comment" name="comment" className="form-control" placeholder="comments"
+										required data-error="Please enter a comment" onChange={handleCommentChange}/>
 								</div>
 							</>
-						) : currentUser?.role === 'Co' ? (
-							<div className="col-md-12">
-								<br></br>
-								<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Reject" onClick={() => handleReject}>Reject</button>
-							</div>
-						) : ('')
+						): ('')
 					}
 					<div className="col-md-12">
 						<br></br>

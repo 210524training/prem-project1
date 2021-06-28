@@ -11,9 +11,9 @@ type Props = {
 
 const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 
-	const [username, setUsername] = useState<string>('');
+	const [username, setUsername] = useState<string>(currentUser?.username || '');
 	const [name, setName] = useState<string>('');
-	const [email, setEmail] = useState<string>('');
+	const [email, setEmail] = useState<string>(currentUser?.email || '');
 	const [submissionDate, setSubmissionDate] = useState<string>('');
 	const [eventDate, setEventDate] = useState<string>('');
 	const [time, setTime] = useState<string>('');
@@ -126,7 +126,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 		await sendNewForm(
 			null, username, name, email, submissionDate, eventDate, time, location, description,
 			cost, gradingFormat, null, gradeCutoff, null, null, eventType,
-			attached, null, null,
+			attached, null, null, null,
 		);
 		history.push('/');
 	}
@@ -146,8 +146,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="form_username">Username *</label>
-									<input id="username" type="text" name="username" className="form-control" placeholder="Please enter your username"
-										required data-error="Username is required." onChange={handleUsernameChange} />
+									<input id="username" type="text" name="username" className="form-control" value={currentUser?.username} />
 								</div>
 							</div>
 							<div className="col-md-6">
@@ -162,15 +161,14 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="email">Email *</label>
-									<input id="email" type="email" name="email" className="form-control" placeholder="Please enter your email"
-										required data-error="Valid email is required." onChange={handleEmailChange} />
+									<input id="email" type="email" name="email" className="form-control" value={currentUser?.email} />
 								</div>
 							</div>
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="current-date">Current Date *</label>
 									<input id="current-date" type="date" name="fullname" className="form-control" placeholder="Current Date"
-										required data-error="Current is required." onChange={handleSubmissionDateChange} />
+										required data-error="Current date is required." onChange={handleSubmissionDateChange} />
 								</div>
 							</div>
 						</div>
@@ -201,7 +199,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 							<div className="col-md-6">
 								<div className="form-group">
 									<label htmlFor="cost">Cost *</label>
-									<input id="cost" type="text" name="cost" className="form-control" placeholder="Cost"
+									<input id="cost" type="number" name="cost" className="form-control" placeholder="Cost"
 										required data-error="Cost is required." onChange={handleCostChange} />
 								</div>
 							</div>

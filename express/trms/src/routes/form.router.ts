@@ -36,23 +36,24 @@ formRouter.post('/', async (req, res) => {
   const {
     formId, username, name, email, submissionDate, eventDate, time, location,
     description, cost, gradingFormat, finalGrade, gradeCutoff, gradeSatisfaction, urgency,
-    eventType, attached, formStatus, approvedBy,
+    eventType, attached, formStatus, approvedBy, comment,
   } = req.body;
 
   res.json(
     await formService.addForm(
       formId, username, name, email, submissionDate, eventDate, time, location, description, cost,
       gradingFormat, finalGrade, gradeCutoff, gradeSatisfaction, urgency, eventType, attached,
-      formStatus, approvedBy,
+      formStatus, approvedBy, comment,
     ),
   );
 });
 
 formRouter.put('/update', async (req, res) => {
   const { form } = req.body;
-  console.log(form);
   res.json(
-    await formService.update(form),
+    await formService.update(
+      form,
+    ),
   );
 });
 

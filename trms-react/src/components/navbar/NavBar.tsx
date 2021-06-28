@@ -62,9 +62,12 @@ const NavBar: React.FC<Props> = ({currentUser, setCurrentUser}) => {
                 </li>
               </>
               ) : (
-              <li className="nav-item">
-                <input type='submit' onClick={handleLogout} value='Logout' />
-              </li>
+               <> 
+                <h5 className="text-white">{currentUser.username}</h5>
+                <li className="nav-item">
+                  <input type='submit' onClick={handleLogout} value='Logout' />
+                </li>
+              </>
               )
             }
           </ul>

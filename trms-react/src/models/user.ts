@@ -6,4 +6,6 @@ export default interface User {
     role: Role;
     email: string;
     forms: string[];
+    availableAmount: number,
+	pendingAmount: number,
 }

@@ -93,11 +93,26 @@ export class ReimbDAO {
     const params: DocumentClient.PutItemInput = {
       TableName: 'formTable',
       Item: {
-        form,
-      },
-      ConditionExpression: 'id = :id',
-      ExpressionAttributeValues: {
-        ':id': form.formId,
+        formId: form.formId,
+        username: form.username,
+        name: form.name,
+        email: form.email,
+        submissionDate: form.submissionDate,
+        eventDate: form.eventDate,
+        time: form.time,
+        location: form.location,
+        description: form.description,
+        cost: form.cost,
+        gradingFormat: form.gradingFormat,
+        finalGrade: form.finalGrade,
+        gradeCutoff: form.gradeCutoff,
+        gradeSatisfaction: form.gradeSatisfaction,
+        urgency: form.urgency,
+        eventType: form.eventType,
+        attached: form.attached,
+        formStatus: form.formStatus,
+        approvedBy: form.approvedBy,
+        comment: form.comment,
       },
     };
     try {

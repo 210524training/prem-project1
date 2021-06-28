@@ -12,8 +12,8 @@ export class FormService {
   urgency(currentDate: string, eventDate: string): boolean {
     const current = new Date(currentDate);
     const changeDate = new Date(eventDate);
-    const checkDate = changeDate.getDate() - 14;
-    if(current.getDate() < checkDate) {
+    const checkDate = changeDate.getTime() - 12096e5;
+    if(current.getTime() < checkDate) {
       return false;
     }
     return true;
@@ -41,6 +41,8 @@ export class FormService {
     formStatus: string | null,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     approvedBy: string | null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    comments: string | ' ',
   ): Promise<boolean> {
     const cost = Number(oldCost);
     const id = Math.random().toString(36).substring(8);
@@ -58,14 +60,15 @@ export class FormService {
       description,
       cost,
       gradingFormat,
-      ' ',
+      '',
       gradeCutoff,
-      null,
+      '',
       isUrgent,
       eventType,
       attached,
       'Supervisor',
       'Pending',
+      ' ',
     ));
     return userForm;
   }
@@ -87,7 +90,6 @@ export class FormService {
   }
 
   update(form: Form): Promise<boolean> {
-    console.log(form.finalGrade);
     return this.forms.update(new Form(
       form.formId,
       form.username,
@@ -108,6 +110,7 @@ export class FormService {
       form.attached,
       form.formStatus,
       form.approvedBy,
+      form.comment,
     ));
   }
 

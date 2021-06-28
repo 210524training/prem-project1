@@ -30,11 +30,11 @@ export const sendNewForm = async (
 	description: string | null, cost: string | null, gradingFormat: string | null,
 	finalGrade: string | null, gradeCutoff: string | null, gradeSatisfaction: string | null,
 	urgency: boolean | null, eventType: string | null, attached: File | string | null,
-	formStatus: string | null, approvedBy: string | null,
+	formStatus: string | null, approvedBy: string | null, comment: string | null,
 	): Promise<Form> => {
 		const {data: form} = await tuitionClient.post<Form>('/api/v1/forms', {
 			formId, username, name, email, submissionDate, eventDate, time, location, description, cost, gradingFormat,
-			finalGrade, gradeCutoff, gradeSatisfaction, urgency, eventType, attached, formStatus, approvedBy,
+			finalGrade, gradeCutoff, gradeSatisfaction, urgency, eventType, attached, formStatus, approvedBy, comment,
 		});
 	return form;
 }
@@ -45,6 +45,8 @@ export const getByUsername = async (username: string | null): Promise<Form[]> =>
 }
 
 export const updateForm = async (form: Form): Promise<Form> => {
+	console.log(form.formStatus);
+	console.log(form.approvedBy);
 	console.log(form.finalGrade);
 	const {data: forms} = await tuitionClient.put<Form>('/api/v1/forms/update', {
 		form,
