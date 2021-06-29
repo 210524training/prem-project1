@@ -19,6 +19,15 @@ export const sendRegister = async (username: string | undefined, password: strin
 	return user;
 }
 
+export const updateUser = async (user: User): Promise<User> => {
+	console.log(user.pendingAmount);
+	console.log(user.availableAmount);
+	const {data: users} = await tuitionClient.put<User>('/api/v1/users/update/set', {
+		user,
+	});
+	return users;
+}
+
 export const getFormsByStatus = async (formStatus: string | undefined): Promise<Form[]> => {
 	const {data: forms} = await tuitionClient.get<Form[]>(`/api/v1/forms/${formStatus}/get-forms`);
 	return forms as Form[];
@@ -27,7 +36,7 @@ export const getFormsByStatus = async (formStatus: string | undefined): Promise<
 export const sendNewForm = async (
 	formId: string | null, username: string | null, name: string | null, email: string | null,
 	submissionDate: string | null, eventDate: string | null, time: string | null, location: string | null,
-	description: string | null, cost: string | null, gradingFormat: string | null,
+	description: string | null, cost: number | null, gradingFormat: string | null,
 	finalGrade: string | null, gradeCutoff: string | null, gradeSatisfaction: string | null,
 	urgency: boolean | null, eventType: string | null, attached: File | string | null,
 	formStatus: string | null, approvedBy: string | null, comment: string | null,
@@ -39,7 +48,7 @@ export const sendNewForm = async (
 	return form;
 }
 
-export const getByUsername = async (username: string | null): Promise<Form[]> => {
+export const getByUsername = async (username: string | undefined): Promise<Form[]> => {
 	const {data: forms} = await tuitionClient.get<Form[]>(`/api/v1/forms/${username}/user`);
 	return forms as Form[];
 }

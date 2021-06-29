@@ -29,9 +29,10 @@ userRouter.post('/', async (req: express.Request<unknown, unknown, User, unknown
   );
 });
 
-userRouter.put('/', async (req: express.Request<unknown, unknown, User, unknown, {}>, res) => {
+userRouter.put('/update/set', async (req, res) => {
+  const { user } = req.body;
   res.json(
-    await userService.update(req.body),
+    await userService.update(user),
   );
 });
 

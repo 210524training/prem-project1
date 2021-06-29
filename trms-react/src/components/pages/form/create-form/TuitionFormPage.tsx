@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import User from '../../../../models/user';
-import { sendNewForm } from '../../../../remote/trms.api';
+import { sendNewForm, updateUser } from '../../../../remote/trms.api';
 import './TuitionFormPage.css';
 
 type Props = {
@@ -24,7 +24,8 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 	const [gradeCutoff, setGradeCutoff] = useState<string>('');
 	const [eventType, setEventType] = useState<string>('');
 	const [attached, setAttached] = useState<File | string | null>(null);
-	const [total, setTotal] = useState<number>(0);
+	const [availableAmount, setAvailableAmount] = useState<number>(currentUser?.availableAmount || 1000);
+	const [pendingAmount, setPendingAmount] = useState<number>(currentUser?.pendingAmount || 0)
 
 	const history = useHistory();
 
@@ -105,17 +106,15 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 				break;
 		}
 		const awardTotal = calculateAmount(total);
-		setTotal(awardTotal);
 		return awardTotal;
 	}
 
 	const calculateAmount = (max: number): number => {
-		const tempCost = Number(cost);
-		let currentFunds
+		let currentFunds;
 		if(currentUser) {
-			currentFunds = 1000 - tempCost;
+			currentFunds = currentUser?.availableAmount - max;
 			if(currentFunds < max) {
-				return 1000;
+				return currentUser?.availableAmount;
 			}
 		}
 		return max;
@@ -123,12 +122,28 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 
 	const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const total = refundAmount(Number(cost), eventType);
+		const pend = pendingAmount + total;
+		const available = availableAmount - total;
+		console.log(total, pend, available);
+		let userUpdate = {
+			username: currentUser?.username,
+			password: currentUser?.password,
+			role: currentUser?.role,
+			email: currentUser?.email,
+			forms: currentUser?.forms,
+			availableAmount: available,
+			pendingAmount: pend,
+		}
 		await sendNewForm(
 			null, username, name, email, submissionDate, eventDate, time, location, description,
-			cost, gradingFormat, null, gradeCutoff, null, null, eventType,
+			total, gradingFormat, null, gradeCutoff, null, null, eventType,
 			attached, null, null, null,
 		);
-		history.push('/');
+		await updateUser(
+			userUpdate,
+		);
+		history.push('/user/forms');
 	}
 
 	return (

@@ -25,6 +25,8 @@ export class UserService {
       'Employee',
       user.email,
       [],
+      1000,
+      0,
     ));
   }
 
@@ -33,13 +35,10 @@ export class UserService {
   }
 
   update(user: User): Promise<boolean> {
-    return this.users.update(new User(
-      user.username,
-      user.password,
-      user.role,
-      user.email,
-      user.forms,
-    ));
+    console.log(user);
+    console.log(user.availableAmount);
+    console.log(user.pendingAmount);
+    return this.users.update(user);
   }
 
   delete(username: string): Promise<boolean> {

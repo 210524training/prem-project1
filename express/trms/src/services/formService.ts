@@ -29,7 +29,7 @@ export class FormService {
     time: string,
     location: string,
     description: string,
-    oldCost: string,
+    cost: number,
     gradingFormat: string,
     finalGrade: string | null,
     gradeCutoff: string,
@@ -44,7 +44,7 @@ export class FormService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     comments: string | ' ',
   ): Promise<boolean> {
-    const cost = Number(oldCost);
+    // const cost = Number(oldCost);
     const id = Math.random().toString(36).substring(8);
     const isUrgent = this.urgency(sDate, eventDate);
 

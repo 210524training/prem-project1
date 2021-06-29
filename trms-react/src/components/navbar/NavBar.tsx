@@ -42,7 +42,7 @@ const NavBar: React.FC<Props> = ({currentUser, setCurrentUser}) => {
               ) : currentUser.role === 'Supervisor' || 'Head' || 'Co' ? (
                 <>
                   <li className="nav-item">
-                    <NavLink className="nav-link" to="/user/forms">My Forms</NavLink>
+                    <NavLink className="nav-link" to="/user/forms">Requested Forms</NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/forms">Create a New Form</NavLink>

@@ -14,7 +14,7 @@ export default class User {
 		public role: Role,
 		public email: string,
 		public forms: string[],
-		public availableAmount: number = 1000,
-		public pendingAmount: number = 0,
+		public availableAmount: number,
+		public pendingAmount: number,
   ) {}
 }

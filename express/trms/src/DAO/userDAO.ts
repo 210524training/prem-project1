@@ -45,18 +45,19 @@ export class UserDAO {
   }
 
   async update(user: User): Promise<boolean> {
-    const params: DocumentClient.PutItemInput = {
+    const params: DocumentClient.UpdateItemInput = {
       TableName: 'userTable',
-      Item: {
-        user,
+      Key: {
+        username: user.username,
       },
-      ConditionExpression: 'username = :u',
+      UpdateExpression: 'SET availableAmount = :av, pendingAmount = :pend',
       ExpressionAttributeValues: {
-        ':u': user.username,
+        ':av': user.availableAmount,
+        ':pend': user.pendingAmount,
       },
     };
     try {
-      await this.dynamo.put(params).promise();
+      await this.dynamo.update(params).promise();
       return true;
     } catch(error) {
       console.log('Something went wrong when updating your account');

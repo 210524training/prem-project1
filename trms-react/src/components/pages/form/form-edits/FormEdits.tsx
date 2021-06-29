@@ -72,8 +72,13 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 					setFormStatus("Co");
 					break;
 				case "Co":
-					setApprovedBy("Approved");
-					setFormStatus("Approved");
+					if(finalGrade ===""){
+						setFormStatus("Co");
+						setApprovedBy("Awaiting Grade");
+					} else {
+						setApprovedBy("Approved");
+						setFormStatus("Approved");
+				}
 			}
 		} else {
 			setApprovedBy("Rejected");
@@ -176,7 +181,7 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 								</div>
 								<div className="col-md-6">
 									<div className="form-group">
-										<label htmlFor="cost">Cost</label>
+										<label htmlFor="cost">Pending Amount</label>
 										<input id="cost" type="text" name="cost" className="form-control" value={currentForm.cost} />
 									</div>
 								</div>
