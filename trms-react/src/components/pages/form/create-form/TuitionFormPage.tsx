@@ -6,10 +6,9 @@ import './TuitionFormPage.css';
 
 type Props = {
 	currentUser: User | undefined,
-	setCurrentUser: Dispatch<SetStateAction<User | undefined>>
 }
 
-const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
+const TuitionFormPage: React.FC<Props> = ({currentUser}) => {
 
 	const [username, setUsername] = useState<string>(currentUser?.username || '');
 	const [name, setName] = useState<string>('');
@@ -26,6 +25,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 	const [attached, setAttached] = useState<File | string | null>(null);
 	const [availableAmount, setAvailableAmount] = useState<number>(currentUser?.availableAmount || 1000);
 	const [pendingAmount, setPendingAmount] = useState<number>(currentUser?.pendingAmount || 0)
+	const [today] = useState(new Date());
 
 	const history = useHistory();
 
@@ -79,7 +79,7 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 
 	const handleAttachedChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if(e.target.files){
-			setAttached(e.target.files[0].name);
+			setAttached(e.target.files[0]);
 		}
 	};
 
@@ -192,7 +192,8 @@ const TuitionFormPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 								<div className="form-group">
 									<label htmlFor="start-date">Start Date *</label>
 									<input id="start-date" type="date" name="start-date" className="form-control" placeholder="Start Date"
-										required data-error="Start Date is required." onChange={handleEventDateChange} />
+										required data-error="Start Date is required." min={new Date(today.getFullYear(), today.getMonth(), today.getDate()+7).toISOString().slice(0, 10)}
+										onChange={handleEventDateChange} />
 								</div>
 							</div>
 							<div className="col-md-6">

@@ -27,6 +27,7 @@ const LoginPage: React.FC<Props> = ({currentUser, setCurrentUser}) => {
 		e.preventDefault();
 		const user = await sendLogin(username, password);
 		setCurrentUser(user);
+		console.log(user);
 		history.push('/');
 	}
 	return (

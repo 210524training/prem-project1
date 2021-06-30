@@ -124,19 +124,18 @@ export class ReimbDAO {
     }
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(formId: string): Promise<void> {
     const params: DocumentClient.DeleteItemInput = {
       TableName: 'formTable',
       Key: {
-        id,
+        formId,
       },
     };
     try {
       await this.dynamo.delete(params).promise();
-      return true;
     } catch(error) {
+      log.debug(error);
       console.log('Something went wrong deleting the form');
-      return false;
     }
   }
 }

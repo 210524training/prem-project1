@@ -28,13 +28,15 @@ export class UserDAO {
       Key: {
         username,
       },
-      ProjectionExpression: '#user, #pass, #r, #em, #f',
+      ProjectionExpression: '#user, #pass, #r, #em, #f, #av, #pend',
       ExpressionAttributeNames: {
         '#user': 'username',
         '#pass': 'password',
         '#r': 'role',
         '#em': 'email',
         '#f': 'formId',
+        '#av': 'availableAmount',
+        '#pend': 'pendingAmount',
       },
     };
     const data = await this.dynamo.get(params).promise();

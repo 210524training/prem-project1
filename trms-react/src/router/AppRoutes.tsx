@@ -23,7 +23,7 @@ const AppRoutes: React.FC<Props> = ({currentUser, setCurrentUser, currentForm, s
 				<HomePage />
 			</Route>
 			<Route exact path='/forms'>
-				<TuitionFormPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
+				<TuitionFormPage currentUser={currentUser} />
 			</Route>
 			<Route exact path='/login'>
 				<LoginPage currentUser={currentUser} setCurrentUser={setCurrentUser} />

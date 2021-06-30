@@ -19,9 +19,9 @@ export const sendRegister = async (username: string | undefined, password: strin
 	return user;
 }
 
-export const updateUser = async (user: User): Promise<User> => {
-	console.log(user.pendingAmount);
-	console.log(user.availableAmount);
+export const updateUser = async (user: User| undefined): Promise<User> => {
+	console.log(user?.pendingAmount);
+	console.log(user?.availableAmount);
 	const {data: users} = await tuitionClient.put<User>('/api/v1/users/update/set', {
 		user,
 	});
@@ -61,4 +61,13 @@ export const updateForm = async (form: Form): Promise<Form> => {
 		form,
 	});
 	return forms;
+}
+
+export const deleteForm = async (form: Form | undefined): Promise<void> => {
+	const {data: forms} = await tuitionClient.delete<Form>(`/api/v1/forms/${form?.formId}`);
+}
+
+export const getUserByUsername = async (username: string | undefined): Promise<User> => {
+	const {data: users} = await tuitionClient.get<User>(`/api/v1/users/${username}`);
+	return users as User;
 }

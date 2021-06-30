@@ -114,8 +114,8 @@ export class FormService {
     ));
   }
 
-  delete(id: string): Promise<boolean> {
-    return this.forms.delete(id);
+  async delete(id: string): Promise<void> {
+    await this.forms.delete(id);
   }
 }
 

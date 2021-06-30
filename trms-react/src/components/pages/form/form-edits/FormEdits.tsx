@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Form from "../../../../models/form";
 import User from "../../../../models/user";
-import { updateForm } from "../../../../remote/trms.api";
+import { deleteForm, getUserByUsername, updateForm, updateUser } from "../../../../remote/trms.api";
 
 type Props = {
   currentForm: Form | undefined;
@@ -11,19 +11,20 @@ type Props = {
 
 const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 
+	// let user = {username: '', password: '', email: '', role: 'Employee', forms: [], availableAmount: 1000, pendingAmount: 0};
+	// if(currentForm){
+	// 	user = getUserByUsername(currentForm.username);
+	// }
+	// console.log(user);
+
   const [finalGrade, setFinalGrade] = useState<string>(currentForm?.finalGrade || '');
   const [gradeSatisfaction, setGradeSatisfaction] = useState<string>('');
   const [formStatus, setFormStatus] = useState<string>(currentForm?.formStatus || '');
   const [approvedBy, setApprovedBy] = useState<string>(currentForm?.approvedBy || '');
 	const [comment, setComment] = useState<string>(currentForm?.comment || '');
-	// const [eventDate, setEventDate] = useState<string>(currentForm?.eventDate || '');
-	// const [time, setTime] = useState<string>(currentForm?.time || '');
-	// const [location, setLocation] = useState<string>(currentForm?.location || '');
-	// const [description, setDescription] = useState<string>(currentForm?.description || '');
-	// const [cost, setCost] = useState<number>(currentForm?.cost || 0);
-	// const [gradingFormat, setGradeFormat] = useState<string>(currentForm?.gradingFormat || '');
-	// const [gradeCutoff, setGradeCutoff] = useState<string>(currentForm?.gradeCutoff || '');
-	// const [eventType, setEventType] = useState<string>(currentForm?.eventType || '');
+	const [pendingAmount, setPendingAmount] = useState<number>(currentUser?.pendingAmount || 0);
+	const [availableAmount, setAvailableAmount] = useState<number>(currentUser?.availableAmount || 0);
+	const [cost, setCost] = useState<number>(currentForm?.cost || 0);
 
   const history = useHistory();
 
@@ -46,6 +47,18 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 	const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setComment(e.target.value);
 	};
+
+	const handleCostChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const newCost = Number(e.target.value);
+		if(newCost < cost) {
+			setPendingAmount(pendingAmount - (cost - newCost));
+			setAvailableAmount(availableAmount + (cost - newCost));
+		} else if(newCost > Number(cost)) {
+			setPendingAmount(pendingAmount + (newCost - cost));
+			setAvailableAmount(availableAmount - (newCost - cost));
+		}
+		setCost(newCost);
+	}
 
   const handleApprovalChange = (role: string | undefined, status: string) => {
 		if(status === 'Approved') {
@@ -81,10 +94,74 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 				}
 			}
 		} else {
+			setPendingAmount(pendingAmount - cost);
+			setAvailableAmount(availableAmount + cost);
 			setApprovedBy("Rejected");
 			setFormStatus("Rejected");
 		}
   };
+
+	const refundAmount = (cost: number, eventType: string): number => {
+		let total = 0;
+		switch(eventType) {
+			case 'Course':
+				total = cost * 0.8;
+				break;
+			case 'Seminar':
+				total = cost * 0.6;
+				break;
+			case 'Certification Prep':
+				total = cost * 0.75;
+				break;
+			case 'Certification':
+				total = cost;
+				break;
+			case 'Tech Training':
+				total = cost * 0.9;
+				break;
+			case 'Other':
+				total = cost * 0.3;
+				break;
+		}
+		const awardTotal = calculateAmount(total);
+		return awardTotal;
+	}
+
+	const calculateAmount = (max: number): number => {
+		let currentFunds;
+		if(currentUser) {
+			currentFunds = currentUser?.availableAmount - max;
+			if(currentFunds < max) {
+				return currentUser?.availableAmount;
+			}
+		}
+		return max;
+	}
+
+	const handleDeleteForm = async (form: Form | undefined) => {
+		let userUpdate;
+		let pend;
+		let available;
+		if(currentUser) {
+			pend = Number(currentUser.pendingAmount) - cost;
+			available = Number(currentUser.availableAmount) + cost;
+			console.log(currentUser);
+			userUpdate = {
+			username: currentUser?.username,
+			password: currentUser?.password,
+			role: currentUser?.role,
+			email: currentUser?.email,
+			forms: currentUser?.forms,
+			availableAmount: available,
+			pendingAmount: pend,
+		}
+	}
+
+		await updateUser(userUpdate);
+
+		await deleteForm(form);
+		history.push('/user/forms');
+	}
 
   const handleFormUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -102,7 +179,7 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 			time: currentForm?.time,
 			location: currentForm?.location,
 			description: currentForm?.description,
-			cost: currentForm?.cost,
+			cost,
 			gradingFormat: currentForm?.gradingFormat,
 			finalGrade,
 			gradeCutoff: currentForm?.gradeCutoff,
@@ -115,7 +192,19 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 			comment,
 		}
 
+		let userUpdate = {
+			username: currentUser?.username,
+			password: currentUser?.password,
+			role: currentUser?.role,
+			email: currentUser?.email,
+			forms: currentUser?.forms,
+			availableAmount,
+			pendingAmount,
+		}
+		console.log(availableAmount, pendingAmount);
+
     await updateForm(updated);
+		await updateUser(userUpdate);
     history.push('/user/forms');
   }
 
@@ -243,9 +332,17 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 									<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Approve Changes"
 										onClick={() => handleApprovalChange(currentUser?.role, 'Approved')}>Approve Changes</button>
 								</div>
+								<div className="col-md-12">
+									<br></br>
+									<button type="button" className="btn btn-danger btn-send pt-2 btn-block container" value="Delete Form"
+										onClick={() => handleDeleteForm(currentForm)}>Delete Request</button>
+								</div>
 							</>
 						) : currentUser?.role ==='Supervisor' || 'Head' || 'Co' ? (
 							<>
+								<label htmlFor="final-grade">Change Amount If Needed</label>
+								<input type="number" className="form-control" placeholder="Change Cost" onChange={handleCostChange} />
+								<br></br>
 								<div className="form-group"> <label htmlFor="form_need">Select who to send to</label>
 									<select id="form_need" name="need" className="form-control" onChange={handleFormStatusChange}>
 										<option value="" selected disabled>--Send To--</option>

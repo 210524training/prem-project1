@@ -6,6 +6,6 @@ export default interface User {
     role: Role | undefined,
     email: string| undefined,
     forms: string[] | undefined,
-    availableAmount: number,
-	pendingAmount: number,
+    availableAmount: number | 1000,
+	pendingAmount: number| 0,
 }
