@@ -235,9 +235,9 @@ const TuitionFormPage: React.FC<Props> = ({currentUser}) => {
 							</div>
 							<div className="col-md-6">
 								<div className="form-group">
-									<label htmlFor="grade-cutoff">Grade Needed to Pass *</label>
-									<input id="grade-cutoff" type="text" name="grade-cutoff" className="form-control" placeholder="Required Grade to Pass"
-										required data-error="Valid grade is required." onChange={handleGradeCutoffChange} />
+									<label htmlFor="grade-cutoff">Grade Needed to Pass(Type video if Presentation) *</label>
+									<input id="grade-cutoff" type="text" name="grade-cutoff" className="form-control" placeholder="Grade or Link"
+										required data-error="Please provide a grade or type 'Link'." onChange={handleGradeCutoffChange} />
 								</div>
 							</div>
 						</div>

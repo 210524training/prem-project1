@@ -67,7 +67,7 @@ const FormDisplay: React.FC<Props> = ({currentUser, setCurrentForm}) => {
             <th scope="col">Time</th>
             <th scope="col">Location</th>
             <th scope="col">Grading Format</th>
-            <th scope="col">Grade Cutoff</th>
+            <th scope="col">Grade Cutoff/Type</th>
             <th scope="col">Final Grade</th>
             <th scope="col">Grade Satisfaction</th>
             <th scope="col">Event Type</th>

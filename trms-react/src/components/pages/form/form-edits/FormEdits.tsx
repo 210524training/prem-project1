@@ -301,7 +301,7 @@ const getEmployeeUser = async (): Promise<User | undefined> => {
 								</div>
 								<div className="col-md-6">
 									<div className="form-group">
-										<label htmlFor="grade-cutoff">Grade Needed to Pass</label>
+										<label htmlFor="grade-cutoff">Grade Needed to Pass/Type</label>
 										<input id="grade-cutoff" type="text" name="grade-cutoff" className="form-control" value={currentForm.gradeCutoff} />
 									</div>
 								</div>
@@ -314,7 +314,7 @@ const getEmployeeUser = async (): Promise<User | undefined> => {
 								</div>
 								<div className="col-md-6">
 									<div className="form-group">
-										<label htmlFor="grade-format">Final Grade</label>
+										<label htmlFor="grade-format">Final Grade or Link</label>
 										<input type="text" id="form_need" name="need" className="form-control" value={currentForm.finalGrade} />
 									</div>
 								</div>
@@ -342,8 +342,8 @@ const getEmployeeUser = async (): Promise<User | undefined> => {
 					{
 						currentUser?.role ==='Employee' ? (
 							<>
-								<label htmlFor="final-grade">Final Grade *</label>
-								<input type="text" className="form-control" placeholder="Final Grade" onChange={hanldeFinalGradeChange} />
+								<label htmlFor="final-grade">Final Grade or Link</label>
+								<input type="text" className="form-control" placeholder="Grade/Link" onChange={hanldeFinalGradeChange} />
 								<div className="col-md-12">
 									<br></br>
 									<button type="button" className="btn btn-success btn-send pt-2 btn-block container" value="Approve Changes"
