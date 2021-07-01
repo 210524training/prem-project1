@@ -69,5 +69,5 @@ export const deleteForm = async (form: Form | undefined): Promise<void> => {
 
 export const getUserByUsername = async (username: string | undefined): Promise<User> => {
 	const {data: users} = await tuitionClient.get<User>(`/api/v1/users/${username}`);
-	return users as User;
+	return users;
 }

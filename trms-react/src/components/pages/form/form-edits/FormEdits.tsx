@@ -11,11 +11,25 @@ type Props = {
 
 const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
 
-	// let user = {username: '', password: '', email: '', role: 'Employee', forms: [], availableAmount: 1000, pendingAmount: 0};
-	// if(currentForm){
-	// 	user = getUserByUsername(currentForm.username);
-	// }
-	// console.log(user);
+const getEmployeeUser = async (): Promise<User | undefined> => {
+	let user: User;
+	if(currentForm) {
+		user = await getUserByUsername(currentForm.username);
+		let employee = {
+			username: user.username,
+			password: user.password,
+			email: user.email,
+			role: user.role,
+			forms: user.forms,
+			availableAmount: user.availableAmount,
+			pendingAmount: user.pendingAmount,
+		}
+		return employee as User;
+	}
+	return currentUser;
+}
+	const user = getEmployeeUser();
+	console.log(user);
 
   const [finalGrade, setFinalGrade] = useState<string>(currentForm?.finalGrade || '');
   const [gradeSatisfaction, setGradeSatisfaction] = useState<string>('');
@@ -212,6 +226,9 @@ const FormEdits: React.FC<Props> = ({currentForm, currentUser}) => {
     <>
       <div className="container">
 				<div className=" text-center mt-5">
+				<div className="col-sm text-center">
+					<h4>Claimable Ammount: {currentUser?.availableAmount}</h4>
+				</div>
 					<br></br>
 					<br></br>
 					<div className="container"><h1>New Tuition Reimbursement Form</h1></div>

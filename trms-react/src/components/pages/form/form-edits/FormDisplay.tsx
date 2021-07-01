@@ -80,6 +80,9 @@ const FormDisplay: React.FC<Props> = ({currentUser, setCurrentForm}) => {
           {table}
         </tbody>
       </table>
+      <div className="col-sm text-center">
+        <h4>Claimable Amount: {currentUser?.availableAmount}</h4>
+      </div>
     </div>
   );
 }

@@ -149,7 +149,9 @@ const TuitionFormPage: React.FC<Props> = ({currentUser}) => {
 	return (
 		<div className="container">
 			<div className=" text-center mt-5">
-				{/* <p>Reimbursement: {(() => refundAmount(Number(cost), eventType))()}</p> */}
+			<div className="col-sm text-center">
+        <h4>Claimable Amount: {currentUser?.availableAmount}</h4>
+      </div>
 				<br></br>
 				<br></br>
 				<h1>New Tuition Reimbursement Form</h1>
