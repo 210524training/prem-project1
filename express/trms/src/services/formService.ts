@@ -1,6 +1,7 @@
 import Form from '../models/form';
 import FormDAO from '../DAO/formDAO';
 import UserDAO from '../DAO/userDAO';
+import log from '../log';
 
 export class FormService {
   constructor(
@@ -116,6 +117,44 @@ export class FormService {
 
   async delete(id: string): Promise<void> {
     await this.forms.delete(id);
+  }
+
+  async autoUpdateFunction(): Promise<void> {
+    const listForms = await this.forms.getAll();
+    log.debug(listForms);
+    listForms.forEach((item: Form) => {
+      if(item.submissionDate) {
+        const subDate = new Date(item.submissionDate);
+        const maxDate = new Date(subDate.getFullYear(), subDate.getMonth(), subDate.getDate() + 14);
+        const todayDate = new Date();
+        if(todayDate > maxDate) {
+          if(!(item.formStatus === 'Rejected') && !(item.formStatus === 'Approved')) {
+            this.forms.update(new Form(
+              item.formId,
+              item.username,
+              item.name,
+              item.email,
+              item.submissionDate,
+              item.eventDate,
+              item.time,
+              item.location,
+              item.description,
+              item.cost,
+              item.gradingFormat,
+              item.finalGrade,
+              item.gradeCutoff,
+              item.gradeSatisfaction,
+              item.urgency,
+              item.eventType,
+              item.attached,
+              'Approved',
+              'Approved',
+              item.comment,
+            ));
+          }
+        }
+      }
+    });
   }
 }
 

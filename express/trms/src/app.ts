@@ -7,6 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import log from './log';
 import baseRouter from './routes';
 import { UserNotFoundError, PasswordDoesNotMatchError, AuthenticationError } from './error/errors';
+import FormService from './services/formService';
 
 dotenv.config({});
 
@@ -67,5 +68,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
   next(err);
 });
+
+setInterval(FormService.autoUpdateFunction, 8.64e+7);
 
 export default app;
